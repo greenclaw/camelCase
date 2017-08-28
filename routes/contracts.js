@@ -16,7 +16,19 @@ var contractsRouter = express.Router({mergeParams: true});
 
 
 contractsRouter.get("/", function(req, res) {
-    res.send({text: "Contracts route", status: 400});
+  var done = false;
+
+  var users = require("../contracts/user");
+  users.forEach(function(user) {
+      var userId = user.userId;
+      if (userId == req.userId) {
+          res.send({contracts: user.contracts});
+          done = true;
+          return;
+      }
+  });
+  if (!done)
+    res.send({contracts: []})
 });
 
 contractsRouter.get("/init", function(req, res) {
@@ -46,24 +58,24 @@ contractsRouter.param("contractId", function(req, res, next, contractId) {
     // once validation is done save the new item in the req
     req.contractId = contractId;
     // go to the next thing
-    next(); 
+    next();
 });
 
 
 
 contractsRouter.get("/:contractId", function(req, res) {
     var users = require("../contracts/user");
-    for(user in users) {
+    users.forEach(function(user) {
         var userId = user.userId;
         if (userId == req.userId) {
-            for(contract in user.contracts) {
+            user.contracts.forEach(function(contract) {
                 if (contract.contractId == req.contractId) {
                     res.send({contract: contract});
                     return;
                 }
-            }
+            });
         }
-    }
+    });
     res.send({contract: []})
 });
 

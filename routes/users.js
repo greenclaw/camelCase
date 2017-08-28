@@ -42,6 +42,7 @@ usersRouter.get("/:userId", function(req, res) {
     users.forEach(function (user) {
         var userId = user.userId;
         if (userId == req.userId) {
+          console.log("B:", getBalance(user.address));
             res.send({userId: userId, balance: getBalance(user.address)});
             done = true;
             return;
@@ -74,18 +75,25 @@ usersRouter.use("/:userId/contracts", contractsRouter);
 
 var getBalance = function(address) {
     var web3 = new Web3(new Web3.providers.HttpProvider(provider_url));
+    // var returnValue = {};
 
-    web3.eth.getBalance(address,
-        function(error, result){
-            console.log(error, result);
-            if(error || !result) {
-                res.send({ balance: error, state: 'danger' });
-            }else{
-                var balance = web3.fromWei(result, 'ether');
-                return {balance: balance, state: 'success' } ;
-            }
-        }
-    );
+    return web3.fromWei(web3.eth.getBalance(address));
+
+    // web3.eth.getBalance(address,
+    //     function(error, result){
+    //         console.log(error, result);
+    //         if(error || !result) {
+    //             returnValue = { balance: error, state: 'danger' };
+    //         }else{
+    //             // result = '21000000000000';
+    //             var balance = web3.fromWei(result, 'ether');
+    //             console.log(balance);
+    //             returnValue = {balance: balance, state: 'success' } ;
+    //         }
+    //     }
+    // );
+    //
+    // return returnValue;
 }
 
 module.exports = usersRouter;
