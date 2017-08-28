@@ -36,15 +36,19 @@ usersRouter.param('userId', function(req, res, next, userId) {
 
 
 usersRouter.get("/:userId", function(req, res) {
-    for(user in users) {
+    let users = require("../contracts/user");
+    var done = false;
+
+    users.forEach(function (user) {
         var userId = user.userId;
         if (userId == req.userId) {
-            res.send({userId: userId, balance: getBal});
+            res.send({userId: userId, balance: getBalance(user.address)});
+            done = true;
             return;
         }
-    }
-    console.log("prov url" + provider_url);
-    res.status(404).send({state: "danger"})
+    });
+    if (!done)
+      res.status(404).send({state: "danger"});
 });
 
 
@@ -69,7 +73,7 @@ usersRouter.get("/:userId", function(req, res) {
 usersRouter.use("/:userId/contracts", contractsRouter);
 
 var getBalance = function(address) {
-    const web3 = new Web3(new Web3.providers.HttpProvider(provider_url));
+    var web3 = new Web3(new Web3.providers.HttpProvider(provider_url));
 
     web3.eth.getBalance(address,
         function(error, result){
@@ -77,7 +81,7 @@ var getBalance = function(address) {
             if(error || !result) {
                 res.send({ balance: error, state: 'danger' });
             }else{
-                var balance = web3.fromWei(result);
+                var balance = web3.fromWei(result, 'ether');
                 return {balance: balance, state: 'success' } ;
             }
         }

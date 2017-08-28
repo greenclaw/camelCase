@@ -43,7 +43,7 @@ module.exports = [
 			},
 			{
 				contractId: 6,
-				producerId: 1
+				producerId: 1,
 				my: true
 			}
 		]
