@@ -36,32 +36,53 @@ usersRouter.param('userId', function(req, res, next, userId) {
 
 
 usersRouter.get("/:userId", function(req, res) {
-    var userId = req.userId;
+    for(user in users) {
+        var userId = user.userId;
+        if (userId == req.userId) {
+            res.send({userId: userId, balance: getBal});
+            return;
+        }
+    }
     console.log("prov url" + provider_url);
-    res.send({userId: userId});
+    res.status(404).send({state: "danger"})
 });
 
 
-usersRouter.get("/:userId/balance", function(req, res){
-    var address = req.query.address;
-    var user_id = req.query.userId;
+// usersRouter.get("/:userId/balance", function(req, res){
+//     var address = req.query.address;
+//     var user_id = req.query.userId;
+//     const web3 = new Web3(new Web3.providers.HttpProvider(provider_url));
+
+//     web3.eth.getBalance(address,
+//         function(error, result){
+//             console.log(error, result);
+//             if(error || !result) {
+//                 res.send({time: Date.now(), userId: user_id, address: address, balance: error, state: 'danger'  });
+//             }else{
+//                 var balance = web3.fromWei(result);
+//                 res.send({time: Date.now(), userId: user_id, address: address, balance: balance, state: 'success'  });
+//             }
+//         }
+//     );
+// });
+
+usersRouter.use("/:userId/contracts", contractsRouter);
+
+var getBalance = function(address) {
     const web3 = new Web3(new Web3.providers.HttpProvider(provider_url));
 
     web3.eth.getBalance(address,
         function(error, result){
             console.log(error, result);
             if(error || !result) {
-                res.send({time: Date.now(), userId: user_id, address: address, balance: error, state: 'danger'  });
+                res.send(balance: error, state: 'danger'  });
             }else{
                 var balance = web3.fromWei(result);
-                res.send({time: Date.now(), userId: user_id, address: address, balance: balance, state: 'success'  });
+                return {balance: balance, state: 'success' } ;
             }
         }
     );
-});
-
-usersRouter.use("/:userId/contracts", contractsRouter);
-
+}
 
 module.exports = usersRouter;
 
