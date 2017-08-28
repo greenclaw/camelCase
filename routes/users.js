@@ -31,7 +31,7 @@ usersRouter.param('userId', function(req, res, next, userId) {
     // once validation is done save the new item in the req
     req.userId = userId;
     // go to the next thing
-    next(); 
+    next();
 });
 
 
@@ -75,7 +75,7 @@ var getBalance = function(address) {
         function(error, result){
             console.log(error, result);
             if(error || !result) {
-                res.send(balance: error, state: 'danger'  });
+                res.send({ balance: error, state: 'danger' });
             }else{
                 var balance = web3.fromWei(result);
                 return {balance: balance, state: 'success' } ;
@@ -85,4 +85,3 @@ var getBalance = function(address) {
 }
 
 module.exports = usersRouter;
-
