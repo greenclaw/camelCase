@@ -21,6 +21,7 @@ module.exports = [
 	},
 	{
 		userId: 2,
+		address: "0x05b22F39d4C8531a2E01893d2F55b4b50F7dC158",
 		contracts: [
 			{
 				contractId: 3,
@@ -35,6 +36,7 @@ module.exports = [
 	},
 	{
 		userId: 3,
+		address: "0x4aa890827072E997932e0e2662F4C2cAE1Bd4d02",
 		contracts: [
 			{
 				contractId: 5,
