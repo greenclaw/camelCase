@@ -7,9 +7,9 @@ const Web3 = require('web3');
 // const EthereumWallet = require('ethereumjs-wallet');
 
 
-// const usersRouter = require("./users");
+var usersRouter = require("./users");
 
-// router.use("/users", usersRouter);
+router.use("/users", usersRouter);
 
 /* GET home page. */
 router.get('/', function(req, res, next) {

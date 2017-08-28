@@ -10,9 +10,9 @@ var contractsRouter = require("./contracts");
 
 var config = require("../contracts/config");
 
-var provider_url = config.provider_url;
-var wallet_addr = config.wallet_addr;
-var wallet_pkey = config.wallet_pkey;
+const provider_url = config.provider_url;
+const wallet_addr = config.wallet_addr;
+const wallet_pkey = config.wallet_pkey;
 
 var usersRouter = express.Router();
 
@@ -34,13 +34,13 @@ usersRouter.param('userId', function(req, res, next, userId) {
     next(); 
 });
 
-usersRouter.use("/:userId/contracts", contractsRouter);
 
 usersRouter.get("/:userId", function(req, res) {
     var userId = req.userId;
     console.log("prov url" + provider_url);
     res.send({userId: userId});
 });
+
 
 usersRouter.get("/:userId/balance", function(req, res){
     var address = req.query.address;
@@ -60,6 +60,7 @@ usersRouter.get("/:userId/balance", function(req, res){
     );
 });
 
+usersRouter.use("/:userId/contracts", contractsRouter);
 
 
 module.exports = usersRouter;

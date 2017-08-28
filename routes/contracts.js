@@ -21,25 +21,12 @@ contractsRouter.get("/", function(req, res) {
 
 contractsRouter.get("/init", function(req, res) {
 
-    const producer_address = "0x71646187A74A4C1471d3C5923b11cc5f0a68024F";
-    const customer_address = web3.eth.coinbase;
     var web3 = new Web3();
     web3.setProvider(new Web3.providers.HttpProvider(provider_url));
+    const producer_address = "0x71646187A74A4C1471d3C5923b11cc5f0a68024F";
+    const customer_address = web3.eth.coinbase;
 
     var contract = web3.eth.contract(abi).at(address);
-    // var contstantInstance = contract.deploy({from:"0xe8798c379d5ca8b3ac3bfeb354c7a70884206e5d"});
-    // engine.start();
-    // contract.checkProgress.call(
-    //     function(error, result){
-
-    //         if(error || !result) {
-    //             res.send({time: Date.now(), address: web3.eth.coinbase, result: error });
-    //         }else{
-    //             res.send({time: Date.now(), address: web3.eth.coinbase, tx: result, result: 'ok' });
-    //         }
-
-    //     }
-    // );
 
     contract.init.sendTransaction(producer_address, customer_address, {from: customer_address},
         function(error, result) {
@@ -65,7 +52,20 @@ contractsRouter.param("contractId", function(req, res, next, contractId) {
 
 
 contractsRouter.get("/:contractId", function(req, res) {
-    res.send({text: "User contract route", contractId: req.query.contractId});
+    var users = require("../contracts/user");
+    for(user in users) {
+        var userId = user.userId;
+        if (userId == req.userId) {
+            for(contract in user.contracts) {
+                if (contract.contractId == req.contractId) {
+                    res.send({contract: contract});
+                    return;
+                }
+            }
+        }
+    }
+    res.send({contract: []})
 });
+
 
 module.exports = contractsRouter;
